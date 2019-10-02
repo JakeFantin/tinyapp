@@ -28,7 +28,7 @@ const users = {
   }
 };
 
-const generateRandomString = function() {
+const generateRandomString = function() { //ID generator - 6 characters
   let randomString = '';
   let alphaNum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZacdefghijklmnopqrstuvwxyz1234567890';
   for (let i = 0; i < 6; i++) {
@@ -37,7 +37,7 @@ const generateRandomString = function() {
   return randomString;
 };
 
-const findEmail = function(email) {
+const findEmail = function(email) { // checks if email already exists
   for (const user in users) {
     if (users[user].email === email) {
       return true;
@@ -46,7 +46,7 @@ const findEmail = function(email) {
   return false;
 };
 
-const findUser = function(email, password) {
+const findUser = function(email, password) { //looks for username and password in database, relaying back different messages based on result
   for (const user in users) {
     if (users[user].email === email) {
       if (users[user].password === password) {
@@ -64,23 +64,22 @@ app.listen(PORT, () => {
 
 });
 
-app.post('/urls', (req, res) => {
+app.post('/urls', (req, res) => { //makes new shortURL
   const smallURL = generateRandomString();
   urlDatabase[smallURL] = req.body.longURL;
-  //console.log(req.body.longURL);
   res.redirect(`/urls/${smallURL}`);
 });
 
-app.get("/urls.json", (req, res) => {
+app.get("/urls.json", (req, res) => { //unknown future use?
   res.json(urlDatabase);
 });
 
-app.get('/home', (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+app.get('/home', (req, res) => { //redirects to /urls
+  res.redirect("/urls");
 });
 
 
-app.get('/urls', (req, res) => {
+app.get('/urls', (req, res) => { //home page, shows shortURLS, their counterparts and options
   let templateVars = { urls: urlDatabase };
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
@@ -88,15 +87,16 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-app.get("/urls/new", (req, res) => {
+app.get("/urls/new", (req, res) => { //renders page to make new shortURL
   let templateVars = {};
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
+    res.redirect('/login');
   }
   res.render("urls_new", templateVars);
 });
 
-app.get("/urls/:shortURL", (req, res) => {
+app.get("/urls/:shortURL", (req, res) => { //renders the urls_show page which displays the page of a shortURL
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
@@ -104,22 +104,22 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render('urls_show', templateVars);
 });
 
-app.post("/urls/:id", (req, res) => {
+app.post("/urls/:id", (req, res) => { //changes the longURL associated with a shortURL
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect(`/urls/${req.params.id}`);
 });
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.post("/urls/:shortURL/delete", (req, res) => { //deletes short URL from urlDatabase
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls');
 });
 
-app.get("/u/:shortURL", (req, res) => {
+app.get("/u/:shortURL", (req, res) => { //is redirect from shortURL to original
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', (req, res) => { //loads the template user_login
   let templateVars = {};
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
@@ -127,7 +127,7 @@ app.get('/login', (req, res) => {
   res.render("user_login", templateVars);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', (req, res) => { //login with validaty checks
   let templateVars = {};
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']], loggedIn: 'You are already logged in!' };
@@ -157,12 +157,12 @@ app.post('/login', (req, res) => {
   }
 });
 
-app.post('/logout', (req, res) => {
+app.post('/logout', (req, res) => { //clears cookies, returns to home page
   res.clearCookie('user_id');
   res.redirect('/urls');
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', (req, res) => { //renders register page
   let templateVars = {};
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
@@ -170,7 +170,7 @@ app.get('/register', (req, res) => {
   res.render('user_registration', templateVars);
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', (req, res) => { //registration with validaty checks
   let templateVars = {};
   if (req.cookies["user_id"]) {
     templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
