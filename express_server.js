@@ -4,7 +4,7 @@ const app = express();
 const PORT = 8080;
 
 app.set('view engine', 'ejs');
-app.use(cookieParser())
+app.use(cookieParser());
 
 
 const bodyParser = require("body-parser");
@@ -26,20 +26,25 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk"
   }
-}
+};
 
-function generateRandomString() {
+const generateRandomString = function() {
   let randomString = '';
   let alphaNum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZacdefghijklmnopqrstuvwxyz1234567890';
   for (let i = 0; i < 6; i++) {
     randomString += alphaNum[Math.floor(Math.random() * alphaNum.length)];
   }
   return randomString;
-}
+};
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
+const findEmail = function(email) {
+  for (const user in users) {
+    if (users[user].email === email) {
+      return true;
+    }
+  }
+  return false;
+};
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -63,25 +68,25 @@ app.get('/home', (req, res) => {
 
 
 app.get('/urls', (req, res) => {
-  let templateVars = { urls: urlDatabase, username: '' };
-  if (req.cookies["username"]) {
-    templateVars["username"] = req.cookies['username'];
+  let templateVars = { urls: urlDatabase };
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
   }
   res.render('urls_index', templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: '' };
-  if (req.cookies["username"]) {
-    templateVars["username"] = req.cookies['username'];
+  let templateVars = {};
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
   }
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: '' }
-  if (req.cookies["username"]) {
-    templateVars["username"] = req.cookies['username'];
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
   }
   res.render('urls_show', templateVars);
 });
@@ -101,32 +106,85 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
+app.get('/login', (req, res) => {
+  let templateVars = {};
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
+  }
+  res.render("user_login", templateVars);
+});
+
 app.post('/login', (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect('/urls');
+  let templateVars = {};
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
+  }
+  if (req.body.email === '' || req.body.password === '') {
+    res.status(400);
+    templateVars = { ...templateVars, error: 'Needs a username or password.' };
+    res.render('user_registration', templateVars);
+  } else if (findEmail(req.body.email)) {
+    console.log('hello')
+    res.status(400);
+    templateVars = { ...templateVars, error: 'Email exists!' };
+    res.render('user_registration', templateVars);
+  } else {
+    const userID = generateRandomString();
+    users[userID] = {
+      id: userID,
+      email: req.body.email,
+      password: req.body.password
+    };
+    if (!req.cookies['user_id']) {
+      res.cookie('user_id', userID);
+      res.redirect('/urls');
+    } else {
+      templateVars = { ...templateVars, message: 'New account created!' };
+      res.render('user_registration', templateVars);
+    }
+  };
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
 });
 
 app.get('/register', (req, res) => {
-  let templateVars = { username: '' };
-  if (req.cookies["username"]) {
-    templateVars["username"] = req.cookies['username'];
+  let templateVars = {};
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
   }
   res.render('user_registration', templateVars);
 });
 
 app.post('/register', (req, res) => {
-  const userID = generateRandomString();
-  users[userID] = {
-    id: userID,
-    email: req.body.email,
-    password: req.body.password
+  let templateVars = {};
+  if (req.cookies["user_id"]) {
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
+  }
+  if (req.body.email === '' || req.body.password === '') {
+    res.status(400);
+    templateVars = { ...templateVars, error: 'Needs a username or password.' };
+    res.render('user_registration', templateVars);
+  } else if (findEmail(req.body.email)) {
+    console.log('hello')
+    res.status(400);
+    templateVars = { ...templateVars, error: 'Email exists!' };
+    res.render('user_registration', templateVars);
+  } else {
+    const userID = generateRandomString();
+    users[userID] = {
+      id: userID,
+      email: req.body.email,
+      password: req.body.password
+    };
+    if (!req.cookies['user_id']) {
+      res.cookie('user_id', userID);
+      res.redirect('/urls');
+    } else {
+      templateVars = { ...templateVars, message: 'New account created!' };
+      res.render('user_registration', templateVars);
+    }
   };
-  res.cookie('user_id', userID);
-  console.log(users);
-  res.redirect('/urls');
-})
+});

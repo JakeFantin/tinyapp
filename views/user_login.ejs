@@ -14,13 +14,10 @@
   </header>
   <main style="margin: 1em;">
     <br><br>
-    <h1 style="padding-left: 50px">Register User</h1>
+    <h1 style="padding-left: 5rem">Login, friend!</h1>
     <br><br>
-    <div style="padding-left: 50px">
-      <% if(locals.message) { %>
-        <a>New Account Created!</a>
-      <% };%>
-      <form method="POST" action="/register">
+    <div style="padding-left: 5rem">
+      <form method="POST" action="/login">
         <div class="form-group">
           <label for="inputEmail1">Email address</label>
           <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah" style="width: 300px;" aria-describedby="emailHelp">
