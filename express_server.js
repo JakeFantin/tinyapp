@@ -46,6 +46,19 @@ const findEmail = function(email) {
   return false;
 };
 
+const findUser = function(email, password){
+  for(const user in users) {
+    if (users[user].email === email) {
+      if(users[user].password === password) {
+        return {id:0,message: users[user].id};
+      } else {
+        return {id:2,message:'Password is incorrect, please try again'};
+      }
+    }
+  }
+  return {id:1,message:'Email not found.'};
+}
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 
@@ -117,30 +130,29 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   let templateVars = {};
   if (req.cookies["user_id"]) {
-    templateVars = { ...templateVars, ...users[req.cookies['user_id']] };
+    templateVars = { ...templateVars, ...users[req.cookies['user_id']], loggedIn: 'You are already logged in!' };
+    res.render('user_login', templateVars);
   }
   if (req.body.email === '' || req.body.password === '') {
     res.status(400);
-    templateVars = { ...templateVars, error: 'Needs a username or password.' };
-    res.render('user_registration', templateVars);
-  } else if (findEmail(req.body.email)) {
-    console.log('hello')
-    res.status(400);
-    templateVars = { ...templateVars, error: 'Email exists!' };
-    res.render('user_registration', templateVars);
+    templateVars = { ...templateVars, error_id: 3, error: 'Needs an email or password.' };
+    res.render('user_login', templateVars);
   } else {
-    const userID = generateRandomString();
-    users[userID] = {
-      id: userID,
-      email: req.body.email,
-      password: req.body.password
-    };
-    if (!req.cookies['user_id']) {
-      res.cookie('user_id', userID);
+    const error = findUser(req.body.email, req.body.password);
+    if(error.id === 0){
+      res.cookie('user_id', error.message);
       res.redirect('/urls');
     } else {
-      templateVars = { ...templateVars, message: 'New account created!' };
-      res.render('user_registration', templateVars);
+      if(error.id === 1){
+        res.status(403);
+        templateVars = { ...templateVars, error_id: error.id, error: error.message };
+        res.render('user_login', templateVars);
+      }
+      if(error.id === 2){
+        res.status(403);
+        templateVars = { ...templateVars, email: req.body.email, error_id: error.id, error: error.message };
+        res.render('user_login', templateVars);
+      }
     }
   };
 });
@@ -165,10 +177,9 @@ app.post('/register', (req, res) => {
   }
   if (req.body.email === '' || req.body.password === '') {
     res.status(400);
-    templateVars = { ...templateVars, error: 'Needs a username or password.' };
+    templateVars = { ...templateVars, error: 'Needs an email or password.' };
     res.render('user_registration', templateVars);
   } else if (findEmail(req.body.email)) {
-    console.log('hello')
     res.status(400);
     templateVars = { ...templateVars, error: 'Email exists!' };
     res.render('user_registration', templateVars);

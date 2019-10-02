@@ -14,24 +14,39 @@
   </header>
   <main style="margin: 1em;">
     <br><br>
-    <h1 style="padding-left: 5rem">Login, friend!</h1>
+    <% if(locals.error && locals.error_id === 1) { %>
+      <h1 style="padding-left: 50px">Friends? I meant acquiantances, clearly.</h1>
+    <% } else if(locals.loggedIn) { %>
+      <h1 style="padding-left: 50px">You are already logged in, pal!</h1>
+    <% } else if(locals.error && locals.error_id === 2) { %>
+      <h1 style="padding-left: 50px">A pretender to the throne! Scoundrel!</h1>
+    <% } else { %>
+      <h1 style="padding-left: 50px">Login, friend!</h1>
+    <% }; %>
     <br><br>
-    <div style="padding-left: 5rem">
+    <div style="padding-left: 50px">
       <form method="POST" action="/login">
         <div class="form-group">
           <label for="inputEmail1">Email address</label>
-          <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah" style="width: 300px;" aria-describedby="emailHelp">
-          <% if(!locals.error) { %>
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <% if(locals.error && locals.error_id === 1 ) { %>
+            <input value="<%=locals.email%>" class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah" style="width: 300px;" aria-describedby="emailHelp">
           <% } else { %>
+            <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah" style="width: 300px;" aria-describedby="emailHelp">
+         <% }; %> 
+         <% if(!locals.error) { %>
+            <small>&nbsp;</small>
+          <% } else if(locals.error_id === 1 || locals.error_id === 3){ %>
             <small class="form-text" style="color: red"><%=error%></small>
           <% }; %>
         </div>
         <div>
           <label for="inputPassword">Password:</label> 
           <input class="form-control" type="password" name="password" placeholder="star-star-sta.." style="width: 300px;">
-          <small id="passwordHelp" class="form-text text-muted">This is a seeeeeecret. Shhhh.</small>
-        </div>  
+          <% if(!locals.error) { %>
+            <small>&nbsp;</small>
+          <% } else if(locals.error_id === 2){ %>
+            <small class="form-text" style="color: red"><%=error%></small>
+          <% }; %>        </div>  
           <button type="submit" class="btn btn-primary" style="margin-top: 1em">Submit</button>
       </form>
     </div>
