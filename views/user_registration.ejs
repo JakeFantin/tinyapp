@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
 </head>
+
 <body>
   <header>
     <% include ./partials/_header %>
@@ -18,30 +21,39 @@
     <br><br>
     <div style="padding-left: 50px">
       <% if(locals.message) { %>
-        <a>New Account Created!</a>
+      <a>New Account Created!</a>
       <% };%>
       <form method="POST" action="/register">
         <div class="form-group">
           <label for="inputEmail1">Email address</label>
-          <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah" style="width: 300px;" aria-describedby="emailHelp">
+          <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah"
+            style="width: 300px;" aria-describedby="emailHelp">
           <% if(!locals.error) { %>
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           <% } else { %>
-            <small class="form-text" style="color: red"><%=error%></small>
+          <small class="form-text" style="color: red"><%=error%></small>
           <% }; %>
         </div>
         <div>
-          <label for="inputPassword">Password:</label> 
-          <input class="form-control" type="password" name="password" placeholder="star-star-sta.." style="width: 300px;">
+          <label for="inputPassword">Password:</label>
+          <input class="form-control" type="password" name="password" placeholder="star-star-sta.."
+            style="width: 300px;">
           <small id="passwordHelp" class="form-text text-muted">This is a seeeeeecret. Shhhh.</small>
-        </div>  
-          <button type="submit" class="btn btn-primary" style="margin-top: 1em">Submit</button>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1em">Submit</button>
       </form>
     </div>
   </main>
   <!-- Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
