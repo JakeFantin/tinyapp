@@ -77,9 +77,15 @@ app.listen(PORT, () => {
 });
 
 app.post('/urls', (req, res) => { //makes new shortURL
-  const smallURL = generateRandomString();
-  urlDatabase[smallURL].lognURL = req.body.longURL;
-  res.redirect(`/urls/${smallURL}`);
+  if (req.cookies["user_id"]) {
+    const smallURL = generateRandomString();
+    urlDatabase[smallURL].longURL = req.body.longURL;
+    urlDatabase[smallURL].userID = req.cookies['user_id'];
+    res.redirect(`/urls/${smallURL}`);
+  } else {
+    res.status(400);
+    res.redirect('/urls');
+  }
 });
 
 app.get("/urls.json", (req, res) => { //unknown future use?
@@ -87,7 +93,11 @@ app.get("/urls.json", (req, res) => { //unknown future use?
 });
 
 app.get('/', (req, res) => { //redirects to /urls
-  res.redirect("/urls");
+  if (req.cookies["user_id"]) {
+    res.redirect('/urls');
+  } else {
+    res.redirect('/login');
+  }
 });
 
 
