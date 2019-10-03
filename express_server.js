@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080;
 
@@ -11,23 +12,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const urlDatabase = {
-  'b6UTxQ': { longURL: "https://www.tsn.ca", userID: "userRandomID" },
-  'i3BoGr': { longURL: "https://www.google.ca", userID: "user2RandomID" }
-};
+const urlDatabase = {};
 
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "pur"
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
-};
+const users = {};
 
 const generateRandomString = function() { //ID generator - 6 characters
   let randomString = '';
@@ -50,7 +37,7 @@ const findEmail = function(email) { // checks if email already exists
 const findUser = function(email, password) { //looks for username and password in database, relaying back different messages based on result
   for (const user in users) {
     if (users[user].email === email) {
-      if (users[user].password === password) {
+      if (bcrypt.compareSync(password, users[user].password)) {
         return { id: 0, message: users[user].id };
       } else {
         return { id: 2, message: 'Password is incorrect, please try again' };
@@ -241,7 +228,7 @@ app.post('/register', (req, res) => { //registration with validaty checks
     users[userID] = {
       id: userID,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password, 10)
     };
     if (!req.cookies['user_id']) {
       res.cookie('user_id', userID);
@@ -251,4 +238,5 @@ app.post('/register', (req, res) => { //registration with validaty checks
       res.render('user_registration', templateVars);
     }
   }
+  console.log(users);
 });
