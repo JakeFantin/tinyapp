@@ -83,8 +83,7 @@ app.post('/urls', (req, res) => { //makes new shortURL
     urlDatabase[smallURL].userID = req.cookies['user_id'];
     res.redirect(`/urls/${smallURL}`);
   } else {
-    res.status(400);
-    res.redirect('/urls');
+    res.redirect('/login');
   }
 });
 
