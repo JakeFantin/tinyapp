@@ -13,6 +13,7 @@
     <% include ./partials/_header %>
   </header>
   <main style="margin: 1em;">
+    <%if(locals.login === true) {%>
     <h3>My URLs</h3>
     <table class="table">
       <thead>
@@ -27,7 +28,7 @@
         <% for(let url in urls) { %>
           <tr>
             <td><%= url %></td>
-            <td><%= urls[url] %></td>
+            <td><%= urls[url].longURL %></td>
             <td>
                 <form method="POST" action="/urls/<%= url %>">
                   <button type="submit" class="btn btn-outline-primary">Edit</button>
@@ -42,6 +43,12 @@
         <% } %>
       </tbody>
     </table>
+    <%} else {%>
+      <h3>That Which Could Be Your URLs,</h3>
+      <div>
+        <a>if only you were logged in. <a href="/login">Login</a>
+      </div>
+      <% }; %>
   </main>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
