@@ -79,8 +79,10 @@ app.listen(PORT, () => {
 app.post('/urls', (req, res) => { //makes new shortURL
   if (req.cookies["user_id"]) {
     const smallURL = generateRandomString();
-    urlDatabase[smallURL].longURL = req.body.longURL;
-    urlDatabase[smallURL].userID = req.cookies['user_id'];
+    urlDatabase[smallURL] = {
+      longURL: req.body.longURL,
+      userID: req.cookies['user_id'],
+    }
     res.redirect(`/urls/${smallURL}`);
   } else {
     res.redirect('/login');
