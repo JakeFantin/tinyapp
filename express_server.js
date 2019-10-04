@@ -2,7 +2,7 @@ const express = require("express");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const bodyParser =require('body-parser');
-const { findEmail, findUser, userURLs } = require('./helper.js');
+const { findUser, userURLs, getUserByEmail } = require('./helpers.js');
 
 const app = express();
 const PORT = 8080;
@@ -30,39 +30,6 @@ const generateRandomString = function() { //ID generator - 6 characters
   }
   return randomString;
 };
-
-// const findEmail = function(email, users) { // checks if email already exists
-//   for (const user in users) {
-//     if (users[user].email === email) {
-//       return true;
-//     }
-//   }
-//   return false;
-// };
-
-// const findUser = function(email, password, users) { //looks for username and password in database, relaying back different messages based on result
-//   for (const user in users) {
-//     if (users[user].email === email) {
-//       if (bcrypt.compareSync(password, users[user].password)) {
-//         return { id: 0, message: users[user].id };
-//       } else {
-//         return { id: 2, message: 'Password is incorrect, please try again' };
-//       }
-//     }
-//   }
-//   return { id: 1, message: 'Email not found.' };
-// };
-
-// const userURLs = function(user, urlDatabase) {
-//   let filteredKeys = Object.keys(urlDatabase);
-//   let userURLs = {};
-//   for (key of filteredKeys) {
-//     if (urlDatabase[key].userID === user) {
-//       userURLs[key] = urlDatabase[key];
-//     }
-//   }
-//   return userURLs;
-// }
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -225,7 +192,7 @@ app.post('/register', (req, res) => { //registration with validaty checks
     res.status(400);
     templateVars = { ...templateVars, error: 'Needs an email or password.' };
     res.render('user_registration', templateVars);
-  } else if (findEmail(req.body.email, users)) {
+  } else if (getUserByEmail(req.body.email, users)) {
     res.status(400);
     templateVars = { ...templateVars, error: 'Email exists!' };
     res.render('user_registration', templateVars);

@@ -1,11 +1,4 @@
-const findEmail = function(email, users) { // checks if email already exists
-  for (const user in users) {
-    if (users[user].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
+const bcrypt = require('bcrypt');
 
 const findUser = function(email, password, users) { //looks for username and password in database, relaying back different messages based on result
   for (const user in users) {
@@ -20,15 +13,23 @@ const findUser = function(email, password, users) { //looks for username and pas
   return { id: 1, message: 'Email not found.' };
 };
 
-const userURLs = function(user, urlDatabase) {
-  let filteredKeys = Object.keys(urlDatabase);
-  let userURLs = {};
-  for (key of filteredKeys) {
-    if (urlDatabase[key].userID === user) {
-      userURLs[key] = urlDatabase[key];
+const getUserByEmail = function(email, database) {
+  for (const user in database) {
+    if (database[user].email === email) {
+      return database[user];
     }
   }
-  return userURLs;
+};
+
+const userURLs = function(user_id, urlDatabase) {
+  let filteredKeys = Object.keys(urlDatabase);
+  let URLs = {};
+  for (key of filteredKeys) {
+    if (urlDatabase[key].userID === user_id) {
+      URLs[key] = urlDatabase[key];
+    }
+  }
+  return URLs;
 }
 
-module.exports = { findUser, userURLs, findEmail };
+module.exports = { findUser, userURLs, getUserByEmail };
