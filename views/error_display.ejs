@@ -1,0 +1,23 @@
+<!-- error page, takes in a status code and a message and displays them -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>URL - TinyApp Example</title>
+</head>
+<body>
+  <header>
+        <% include ./partials/_header %>
+  </header>
+  <main style="margin: 1em;">
+    <h2>You've encountered an error: <%=statusCode%></h2>
+    <a><%=message%></a>
+    <br><br>
+    <img src="https://http.cat/<%=statusCode%>">
+  </main>
+</body>
+
+</html>

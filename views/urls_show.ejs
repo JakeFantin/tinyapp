@@ -1,3 +1,4 @@
+<!-- view for a particular shortURL, including the option to edit -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +10,7 @@
 </head>
 
 <body>
+  <!-- common header -->
   <header>
     <% include ./partials/_header %>
   </header>
@@ -18,8 +20,8 @@
       <h5 class="card-title">TinyURL for: <%= longURL %></h5>
       <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
     </div>
-    <% if(locals.ownership) {%>
     <div>
+      <!-- form for changing the longURL associated with the short URL -->
       <form action="/urls/<%= shortURL %>" method="POST">
         <h2>
           <label for="edit">Edit</label>
@@ -27,19 +29,14 @@
         <div>
           <label for="longURL">Update URL:</label>
           <div class="input-group mb-3" style="width: 400px; margin: 0 auto">
-            <input id="edit" class="form-control" type="text" name="longURL" placeholder="http://"
+            <input id="edit" class="form-control" type="text" name="longURL" placeholder="<%=longURL%>"
               style="width: 300px; margin: 0 auto">
             <div class="input-group-append">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Update</button>
             </div>
           </div>
         </div>
       </form>
-      <% } else { %>
-      <br><br>
-      <h3><%=message%></h3>
-      <br><br>
-      <% }; %>
     </div>
     <div class="card-footer text-muted"></div>
   </div>

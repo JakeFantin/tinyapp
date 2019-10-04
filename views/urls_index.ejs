@@ -1,3 +1,4 @@
+<!-- home page of the app, displays a users shortened URLS if they're logged in -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +10,12 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <!-- common header -->
   <header>
     <% include ./partials/_header %>
   </header>
   <main style="margin: 1em;">
+    <!-- if user is logged in, displays a table with the shortURLS, longURLS, 'edit' and 'delete' option -->
     <%if(locals.login === true) {%>
     <h3>My URLs</h3>
     <table class="table">
@@ -25,12 +28,15 @@
         </tr>
       </thead>
       <tbody>
+        <!-- here urls is an object of a users constructed shortURL as objects -->
         <% for(let url in urls) { %>
           <tr>
-            <td><%= url %></td>
+            <!-- url is the shortURL as a string -->
+            <td><%= url %></td> 
+            <!-- urls[url].longURL is the original URL of the shortURL -->
             <td><%= urls[url].longURL %></td>
             <td>
-                <form method="POST" action="/urls/<%= url %>">
+                <form method="GET" action="/urls/<%= url %>">
                   <button type="submit" class="btn btn-outline-primary">Edit</button>
                 </form>
             </td>
@@ -43,7 +49,9 @@
         <% } %>
       </tbody>
     </table>
+    <a href="/urls/new">Make a new URL!</a>
     <%} else {%>
+      <!-- if the user is not logged in , they see a message prompting them to login -->
       <h3>That Which Could Be Your URLs,</h3>
       <div>
         <a>if only you were logged in. <a href="/login">Login</a>

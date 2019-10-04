@@ -1,3 +1,4 @@
+<!-- view where the user registers a new account,  -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +13,7 @@
 </head>
 
 <body>
+  <!-- common header -->
   <header>
     <% include ./partials/_header %>
   </header>
@@ -19,15 +21,13 @@
     <br><br>
     <h1 style="padding-left: 50px">Register User</h1>
     <br><br>
-    <div style="padding-left: 50px">
-      <% if(locals.message) { %>
-      <a>New Account Created!</a>
-      <% };%>
-      <form method="POST" action="/register">
         <div class="form-group">
+          <!-- form takes in email and password -->
+          <form method="POST" action="/register">
           <label for="inputEmail1">Email address</label>
           <input class="form-control" id="inputEmail" type="email" name="email" placeholder="blah@blah.blah"
             style="width: 300px;" aria-describedby="emailHelp">
+            <!-- if there is an error in the registration, it changes the small text to the error message -->
           <% if(!locals.error) { %>
           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           <% } else { %>

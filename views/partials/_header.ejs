@@ -1,3 +1,4 @@
+<!-- common header for all other views, which has navigation options and authentification options -->
 <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-success">
       <a class="navbar-brand" href="/urls">TinyApp</a>
@@ -10,16 +11,20 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </div>
       </div>
+      <!-- here there is a split based on whether the user is logged in, changing the form -->
         <% if(locals.id){ %>
+          <!-- if user is logged in, displays their email and a logout button -->
           <form class="form-inline" method="POST" action="/logout">
+            <a style="padding-right: 1rem"><%=email%></a>
             <button class="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
         <% } else { %>
+          <!-- if user is not logged in, displays login and register buttons -->
           <form class="form-inline" method="GET" action="/login">
             <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
-        <% } %>
           </form>
           <form class="form-inline" method="GET" action="/register">
               <button class="btn btn-success my-2 my-sm-0" type="submit">Register</button>
+        <% } %>
           </form>
     </nav>
   </header>
